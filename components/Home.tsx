@@ -43,7 +43,7 @@ const Home: React.FC<HomeProps> = ({ onNavigateToMenu }) => {
           </div>
           <div className="flex-1 relative">
              <img 
-               src="https://images.unsplash.com/photo-1556910103-1c02745a30bf?q=80&w=1000&auto=format&fit=crop" 
+               src="https://images.pexels.com/photos/5964500/pexels-photo-5964500.jpeg" 
                alt="Bakers kneading dough" 
                className="rounded-lg shadow-2xl w-full h-[600px] object-cover"
              />
@@ -57,7 +57,7 @@ const Home: React.FC<HomeProps> = ({ onNavigateToMenu }) => {
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-24 border-t border-stone-200 pt-12">
           {[
-            { label: 'Years of Experience', value: '10+' },
+            { label: 'Years of Experience', value: '3+' },
             { label: 'Loaves Baked Monthly', value: '5K+' },
             { label: 'Freshly Baked', value: '100%' },
             { label: 'Happy Customers', value: '1K+' }
@@ -83,7 +83,7 @@ const Home: React.FC<HomeProps> = ({ onNavigateToMenu }) => {
           <div className="group relative bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col border border-stone-100">
             <div className="relative h-48 overflow-hidden">
               <img 
-                src="https://images.unsplash.com/photo-1504196606672-aef5c9cefc92?q=80&w=800&auto=format&fit=crop" 
+                src="https://i.pinimg.com/736x/dc/4f/16/dc4f16b883e16a0c38cae1627f6c95b0.jpg" 
                 alt="Weekend Coffee and Pastry" 
                 className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" 
               />
@@ -109,7 +109,7 @@ const Home: React.FC<HomeProps> = ({ onNavigateToMenu }) => {
           <div className="group relative bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col border border-stone-100">
             <div className="relative h-48 overflow-hidden">
               <img 
-                src="https://images.unsplash.com/photo-1626202162993-90d56c42971d?q=80&w=800&auto=format&fit=crop" 
+                src="https://i.pinimg.com/736x/49/d3/1a/49d31af269f6d3f656af3c283ff8b4dd.jpg" 
                 alt="Beautiful Gift Box" 
                 className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" 
               />
@@ -135,7 +135,7 @@ const Home: React.FC<HomeProps> = ({ onNavigateToMenu }) => {
           <div className="group relative bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col border border-stone-100">
             <div className="relative h-48 overflow-hidden">
               <img 
-                src="https://images.unsplash.com/photo-1517433367423-c7e5b0f35086?q=80&w=800&auto=format&fit=crop" 
+                src="https://i.pinimg.com/1200x/16/5e/96/165e96a14b0db1b227b18ef8d296268e.jpg" 
                 alt="Catering Platter" 
                 className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" 
               />
@@ -165,9 +165,9 @@ const Home: React.FC<HomeProps> = ({ onNavigateToMenu }) => {
         <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
         <div className="max-w-7xl mx-auto px-6 relative z-10 flex flex-col md:flex-row items-center gap-16">
           <div className="flex-1">
-             <img src="https://images.unsplash.com/photo-1621236378699-8597fca5a6e6?q=80&w=800&auto=format&fit=crop" alt="Cinnamon Roll Deluxe" className="rounded-sm shadow-2xl border-4 border-white/10 w-full object-cover" />
+             <img src="https://images.pexels.com/photos/16637679/pexels-photo-16637679.jpeg" alt="Cinnamon Roll Deluxe" className="rounded-sm shadow-2xl border-4 border-white/10 w-full object-cover" />
              <div className="bg-cream text-coffee p-6 max-w-xs mx-auto -mt-20 relative z-20 shadow-xl text-center">
-                <img src="https://images.unsplash.com/photo-1612203985729-107524d433cc?q=80&w=400&auto=format&fit=crop" alt="Roll detail" className="w-full h-48 object-cover mb-4" />
+                <img src="https://images.pexels.com/photos/4993991/pexels-photo-4993991.jpeg" alt="Roll detail" className="w-full h-48 object-cover mb-4" />
                 <h4 className="font-serif text-xl">Cinnamon Roll</h4>
              </div>
           </div>
@@ -189,7 +189,7 @@ const Home: React.FC<HomeProps> = ({ onNavigateToMenu }) => {
         <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center gap-12">
            <div className="flex-shrink-0 w-full md:w-1/3">
              <div className="relative aspect-[3/4] rounded-full md:rounded-lg overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop" alt="Angel Lorenza" className="w-full h-full object-cover" />
+                <img src="https://i.pinimg.com/736x/c2/9a/39/c29a39893c43e7e9a39581d1019eb6a6.jpg" alt="Angel Akinyi" className="w-full h-full object-cover" />
                 <div className="absolute top-4 left-4 bg-cream w-12 h-12 rounded-full"></div>
              </div>
            </div>

@@ -8,11 +8,20 @@ export default defineConfig(({ mode }) => {
       server: {
         port: 3000,
         host: '0.0.0.0',
+        proxy: {
+          '/mpesa': {
+            target: 'https://sandbox.safaricom.co.ke',
+            changeOrigin: true,
+            rewrite: (path) => path.replace(/^\/mpesa/, ''),
+          },
+        },
       },
       plugins: [react()],
       define: {
         'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-        'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY)
+        'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
+        'process.env.VITE_MPESA_CONSUMER_KEY': JSON.stringify(env.VITE_MPESA_CONSUMER_KEY),
+        'process.env.VITE_MPESA_CONSUMER_SECRET': JSON.stringify(env.VITE_MPESA_CONSUMER_SECRET)
       },
       resolve: {
         alias: {

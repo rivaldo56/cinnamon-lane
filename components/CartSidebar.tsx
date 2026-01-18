@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { CartItem } from '../types';
+import { mpesaService } from '../services/mpesaService';
 
 interface CartSidebarProps {
   isOpen: boolean;
@@ -80,13 +81,23 @@ const CartSidebar: React.FC<CartSidebarProps> = ({
 
     setStep('PROCESSING');
     
-    // Simulate Supabase Edge Function -> Daraja API call
-    setTimeout(() => {
-      setStep('SUCCESS');
+    try {
+      const response = await mpesaService.initiateSTKPush(phoneNumber, total);
+      console.log('STK Push Initiated:', response);
+      
+      // If response is successful, we wait for a few seconds then show success
+      // In a real app, you'd poll an endpoint or use webhooks to confirm payment
       setTimeout(() => {
-        onCheckoutComplete(phoneNumber);
-      }, 3500); // Allow time to read success message
-    }, 4000); // Simulate network/user PIN entry time
+        setStep('SUCCESS');
+        setTimeout(() => {
+          onCheckoutComplete(phoneNumber);
+        }, 3500);
+      }, 5000); 
+    } catch (error: any) {
+      console.error('Payment Error:', error);
+      alert(error.message || 'Payment initiation failed. Please try again.');
+      setStep('CART_AND_PAY');
+    }
   };
 
   if (!isOpen) return null;
