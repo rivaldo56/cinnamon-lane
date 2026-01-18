@@ -28,7 +28,7 @@ const Hero: React.FC<HeroProps> = ({ onOpenBoxBuilder, onNavigateToMenu }) => {
       {/* Background Image Layer */}
       <div className="absolute inset-0 z-0">
         <img 
-          src="https://images.unsplash.com/photo-1509365465985-25d11c17e812?q=80&w=2670&auto=format&fit=crop" 
+          src="https://images.unsplash.com/photo-1509365465985-25d11c17e812?q=60&w=1600&auto=format&fit=crop" 
           alt="Fresh Cinnamon Rolls on Wooden Table" 
           className="w-full h-full object-cover"
         />
