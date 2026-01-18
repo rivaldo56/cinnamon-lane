@@ -1,20 +1,11 @@
 
 export const mpesaService = {
   async getAccessToken() {
-    const consumerKey = import.meta.env.VITE_MPESA_CONSUMER_KEY;
-    const consumerSecret = import.meta.env.VITE_MPESA_CONSUMER_SECRET;
-    
-    // We use the proxy defined in vite.config.ts to avoid CORS issues
-    const url = '/mpesa/oauth/v1/generate?grant_type=client_credentials';
-    const auth = btoa(`${consumerKey}:${consumerSecret}`);
+    // Call our serverless function instead of direct Safaricom API
+    const url = '/api/mpesa/auth';
 
     try {
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Basic ${auth}`,
-        },
-      });
+      const response = await fetch(url);
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -62,13 +53,13 @@ export const mpesaService = {
         TransactionDesc: 'Bakery Order Payment'
       };
 
-      const response = await fetch('/mpesa/mpesa/stkpush/v1/processrequest', {
+      // Call our serverless function
+      const response = await fetch('/api/mpesa/stkpush', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({ token, payload }),
       });
 
       if (!response.ok) {

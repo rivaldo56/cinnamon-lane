@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/api/mpesa/:path*", "destination": "/api/mpesa/:path*" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
