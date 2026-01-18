@@ -4,6 +4,7 @@ import Hero from './components/Hero';
 import MenuGrid from './components/MenuGrid';
 import CartSidebar from './components/CartSidebar';
 import AdminDashboard from './components/AdminDashboard';
+import StaffLogin from './components/StaffLogin';
 import BoxBuilder from './components/BoxBuilder';
 import Home from './components/Home';
 import ChatBot from './components/ChatBot';
@@ -16,6 +17,7 @@ import { useEffect } from 'react';
 const App: React.FC = () => {
   // --- State ---
   const [viewMode, setViewMode] = useState<ViewMode>('CUSTOMER');
+  const [isStaffAuthenticated, setIsStaffAuthenticated] = useState(false);
   const [currentPage, setCurrentPage] = useState<Page>('HOME'); // Routing State
   const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
@@ -289,14 +291,21 @@ const App: React.FC = () => {
           <ChatBot products={products} onAddToCart={addToCart} />
         </>
       ) : (
-        <AdminDashboard 
-          products={products}
-          orders={orders}
-          toggleProductStatus={toggleProductStatus}
-          updateOrderStatus={updateOrderStatus}
-          onAddProduct={handleAddProduct}
-          onUpdateProduct={handleUpdateProduct}
-        />
+        !isStaffAuthenticated ? (
+          <StaffLogin 
+            onLogin={() => setIsStaffAuthenticated(true)} 
+            onCancel={() => setViewMode('CUSTOMER')} 
+          />
+        ) : (
+          <AdminDashboard 
+            products={products}
+            orders={orders}
+            toggleProductStatus={toggleProductStatus}
+            updateOrderStatus={updateOrderStatus}
+            onAddProduct={handleAddProduct}
+            onUpdateProduct={handleUpdateProduct}
+          />
+        )
       )}
 
       <CartSidebar 
