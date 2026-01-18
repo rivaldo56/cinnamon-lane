@@ -65,7 +65,7 @@ const Hero: React.FC<HeroProps> = ({ onOpenBoxBuilder, onNavigateToMenu }) => {
         {/* Massive Headline */}
         <div className="relative text-center select-none">
           <h1 className="font-sans font-black text-cream text-[20vw] md:text-[18vw] leading-[0.8] tracking-tighter uppercase drop-shadow-2xl scale-y-110">
-            Cinnamon
+            Cinnamon Lane
           </h1>
           
           {/* Script Accent */}

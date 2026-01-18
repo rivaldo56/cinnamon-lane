@@ -16,7 +16,7 @@ const Home: React.FC<HomeProps> = ({ onNavigateToMenu }) => {
   ];
 
   return (
-    <div className="relative z-10 bg-cream w-full shadow-[0_-25px_50px_rgba(0,0,0,0.1)]">
+    <article className="relative z-10 bg-cream w-full shadow-[0_-25px_50px_rgba(0,0,0,0.1)]">
       
       {/* --- ABOUT US SECTION --- */}
       <section className="py-24 px-6 md:px-12 max-w-7xl mx-auto">
@@ -257,7 +257,7 @@ const Home: React.FC<HomeProps> = ({ onNavigateToMenu }) => {
          </div>
       </section>
 
-    </div>
+    </article>
   );
 };
 
