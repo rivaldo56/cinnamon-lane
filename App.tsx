@@ -9,6 +9,9 @@ import Home from './components/Home';
 import ChatBot from './components/ChatBot';
 import { INITIAL_PRODUCTS } from './constants';
 import { Product, CartItem, Order, OrderStatus, ViewMode, BoxState, Page } from './types';
+import { productService } from './services/productService';
+import { orderService } from './services/orderService';
+import { useEffect } from 'react';
 
 const App: React.FC = () => {
   // --- State ---
@@ -17,6 +20,21 @@ const App: React.FC = () => {
   const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+
+  // Fetch products from database on mount
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const data = await productService.getProducts();
+        if (data && data.length > 0) {
+          setProducts(data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch products:', error);
+      }
+    };
+    fetchProducts();
+  }, []);
   
   // Box Builder State
   const [boxState, setBoxState] = useState<BoxState>({
@@ -25,31 +43,34 @@ const App: React.FC = () => {
     items: []
   });
 
-  // Mock Loyalty DB (Phone -> Count)
-  const [loyaltyDb, setLoyaltyDb] = useState<Record<string, number>>({
-    '0712345678': 11, // Test user near reward
-    '0722000000': 3
-  });
+  const [loyaltyDb, setLoyaltyDb] = useState<Record<string, number>>({});
   
-  // Mock Orders for Admin
-  const [orders, setOrders] = useState<Order[]>([
-    {
-      id: 'ord_123',
-      customerPhone: '0712345678',
-      items: [{ ...INITIAL_PRODUCTS[0], quantity: 2 }, { ...INITIAL_PRODUCTS[2], quantity: 1 }],
-      total: 1500,
-      status: OrderStatus.PENDING,
-      timestamp: new Date()
-    },
-    {
-      id: 'ord_124',
-      customerPhone: '0722000000',
-      items: [{ ...INITIAL_PRODUCTS[1], quantity: 6 }],
-      total: 2100,
-      status: OrderStatus.BAKING,
-      timestamp: new Date(Date.now() - 1000 * 60 * 15) // 15 mins ago
-    }
-  ]);
+  // Orders for Admin
+  const [orders, setOrders] = useState<Order[]>([]);
+
+  // Fetch products and orders from database on mount
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [productsData, ordersData] = await Promise.all([
+          productService.getProducts(),
+          orderService.getOrders()
+        ]);
+        
+        if (productsData && productsData.length > 0) {
+          setProducts(productsData);
+        }
+        
+        setOrders(ordersData);
+        
+        // Also sync loyalty counts from orders if needed, 
+        // but for now let's just use the phone lookup
+      } catch (error) {
+        console.error('Failed to fetch data:', error);
+      }
+    };
+    fetchData();
+  }, []);
 
   // --- Navigation ---
   const handleNavigate = (page: Page) => {
@@ -133,28 +154,31 @@ const App: React.FC = () => {
     return loyaltyDb[phone] || 0;
   };
 
-  const handleCheckoutComplete = (phone: string) => {
-    // 1. Update Loyalty
-    setLoyaltyDb(prev => ({
-      ...prev,
-      [phone]: (prev[phone] || 0) + 1
-    }));
+  const handleCheckoutComplete = async (phone: string) => {
+    const total = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0) + 150; // + delivery
+    
+    try {
+      // 1. Save to Database
+      await orderService.createOrder(phone, cartItems, total);
+      
+      // 2. Update Local State (optimistic or refresh)
+      const ordersData = await orderService.getOrders();
+      setOrders(ordersData);
+      
+      // 3. Update Loyalty locally
+      setLoyaltyDb(prev => ({
+        ...prev,
+        [phone]: (prev[phone] || 0) + 1
+      }));
 
-    // 2. Create Order
-    const newOrder: Order = {
-      id: `ord_${Math.random().toString(36).substr(2, 9)}`,
-      customerPhone: phone,
-      items: [...cartItems],
-      total: cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0) + 150, // + delivery
-      status: OrderStatus.PENDING,
-      timestamp: new Date()
-    };
-
-    setOrders(prev => [newOrder, ...prev]);
-    setCartItems([]);
-    setTimeout(() => {
-        setIsCartOpen(false);
-    }, 500);
+      setCartItems([]);
+      setTimeout(() => {
+          setIsCartOpen(false);
+      }, 500);
+    } catch (error) {
+      console.error('Checkout failed:', error);
+      alert('Checkout failed. Please try again.');
+    }
   };
 
   // --- Admin Actions ---
@@ -163,21 +187,39 @@ const App: React.FC = () => {
     setProducts(prev => prev.map(p => p.id === id ? { ...p, isActive: !p.isActive } : p));
   };
 
-  const updateOrderStatus = (orderId: string, status: OrderStatus) => {
-    setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status } : o));
+  const updateOrderStatus = async (orderId: string, status: OrderStatus) => {
+    try {
+      await orderService.updateOrderStatus(orderId, status);
+      setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status } : o));
+    } catch (error) {
+      console.error('Failed to update order status:', error);
+    }
   };
 
-  const handleAddProduct = (productData: Omit<Product, 'id' | 'isActive'>) => {
+  const handleAddProduct = async (productData: Omit<Product, 'id' | 'isActive'>) => {
     const newProduct: Product = {
       id: Date.now().toString(),
       isActive: true,
       ...productData
     };
-    setProducts(prev => [...prev, newProduct]);
+    
+    try {
+      await productService.addProduct(newProduct);
+      setProducts(prev => [...prev, newProduct]);
+    } catch (error) {
+      console.error('Failed to add product to database:', error);
+      // Still update UI for immediate feedback, or show error? 
+      // For now, let's keep it optimistic but log the error
+    }
   };
 
-  const handleUpdateProduct = (updatedProduct: Product) => {
-    setProducts(prev => prev.map(p => p.id === updatedProduct.id ? updatedProduct : p));
+  const handleUpdateProduct = async (updatedProduct: Product) => {
+    try {
+      await productService.updateProduct(updatedProduct);
+      setProducts(prev => prev.map(p => p.id === updatedProduct.id ? updatedProduct : p));
+    } catch (error) {
+      console.error('Failed to update product in database:', error);
+    }
   };
 
   // --- Render ---

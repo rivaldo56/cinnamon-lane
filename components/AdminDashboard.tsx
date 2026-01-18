@@ -70,18 +70,20 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
     setIsUploading(true);
     
-    // Simulate upload delay for UX
-    // In a real app, this would be: const { url } = await supabase.storage.from('products').upload(file.name, file);
-    
-    const reader = new FileReader();
-    reader.onloadend = () => {
+    try {
+      const { productService } = await import('../services/productService');
+      const publicUrl = await productService.uploadImage(file);
+      
       setFormData(prev => ({
         ...prev,
-        [field]: reader.result as string
+        [field]: publicUrl
       }));
+    } catch (error) {
+      console.error('Upload failed:', error);
+      alert('Failed to process image for database storage.');
+    } finally {
       setIsUploading(false);
-    };
-    reader.readAsDataURL(file);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
