@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { createChefChat } from '../services/geminiService';
+import { createChefChat, GroqChatSession } from '../services/groqService';
 import { Product } from '../types';
-import { ChatSession, GenerateContentResponse } from "@google/genai";
 
 interface ChatBotProps {
   products: Product[];
@@ -20,7 +19,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ products, onAddToCart }) => {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const chatSessionRef = useRef<ChatSession | null>(null);
+  const chatSessionRef = useRef<GroqChatSession | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Initialize Chat Session
